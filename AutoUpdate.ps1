@@ -1,4 +1,5 @@
+Install-module pswindowsupdate -force -AllowClobber;
 get-windowsupdate -acceptall -install;
 winget upgrade --all;
 sfc /scannow;
-restart -r -t 00
+Restart-Computer
