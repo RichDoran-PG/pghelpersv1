@@ -1,5 +1,14 @@
-Install-module pswindowsupdate -force -AllowClobber;
-get-windowsupdate -acceptall -install;
-winget upgrade --all -force -AllowClobber;
-sfc /scannow;
-Restart-Computer
+# Install PSWindowsUpdate module
+Install-Module -Name PSWindowsUpdate -Force -AllowClobber
+
+# Install all Windows updates
+Get-WindowsUpdate -AcceptAll -Install
+
+# Upgrade all applications using winget (removing AllowClobber)
+winget upgrade --all --force
+
+# Run System File Checker
+sfc /scannow
+
+# Restart the computer
+Restart-Computer -Force
