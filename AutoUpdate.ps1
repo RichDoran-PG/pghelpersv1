@@ -11,4 +11,4 @@ winget upgrade --all --force
 sfc /scannow
 
 # Restart the computer
-Restart-Computer -Force
+#Restart-Computer -Force
