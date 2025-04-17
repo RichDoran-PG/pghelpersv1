@@ -1,4 +1,4 @@
-$policyName = "Block Non-USA Sign-ins"
+$policyName = "Block OCONUS Sign-ins"
 $tenantId = (Get-AzTenant).Id
 
 # Define the location condition (USA only)
@@ -13,10 +13,10 @@ $userCondition = @{
     ExcludeUsers = @("Pgadmin")  # Excludes "Pgadmin" user
 }
 
-# Define the policy settings
+# Define the policy settings (Set to Report-Only)
 $policySettings = @{
     DisplayName = $policyName
-    State = "Enabled"
+    State = "ReportOnly"  # Change from 'Enabled' to 'ReportOnly'
     Conditions = @{
         Locations = $locationCondition
         Users = $userCondition
