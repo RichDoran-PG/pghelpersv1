@@ -3,7 +3,6 @@ Install-Module Microsoft.Graph -Scope CurrentUser -Force
 Connect-MgGraph
 Get-MgConditionalAccessPolicy
 
-
 $policyName = "Block OCONUS Sign-ins"
 $tenantId = (Get-AzTenant).Id
 
@@ -13,16 +12,22 @@ $locationCondition = @{
     ExcludeLocations = @()
 }
 
-# Define the user exclusion condition
+# Retrieve Global Administrator Role ID
+$globalAdminRoleId = "62e90394-69f5-4237-9190-012177145e10"  # Default Azure Global Admin Role ID
+
+# Get all users assigned to Global Admin role
+$globalAdminUsers = Get-MgRoleManagementDirectoryRoleAssignment | Where-Object { $_.RoleDefinitionId -eq $globalAdminRoleId } | Select-Object -ExpandProperty PrincipalId
+
+# Define the user exclusion condition (Exclude Global Admins)
 $userCondition = @{
     IncludeUsers = @("All")
-    ExcludeUsers = @("Pgadmin")  # Excludes "Pgadmin" user
+    ExcludeUsers = $globalAdminUsers  # Excludes Global Administrators
 }
 
-# Define the policy settings (Set to Report-Only)
+# Define the policy settings
 $policySettings = @{
     DisplayName = $policyName
-    State = "ReportOnly"  # Change from 'Enabled' to 'ReportOnly'
+    State = "Enabled"
     Conditions = @{
         Locations = $locationCondition
         Users = $userCondition
