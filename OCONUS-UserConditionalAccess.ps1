@@ -1,3 +1,9 @@
+# Set Module MS Graph
+Install-Module Microsoft.Graph -Scope CurrentUser -Force
+Connect-MgGraph
+Get-MgConditionalAccessPolicy
+
+
 $policyName = "Block OCONUS Sign-ins"
 $tenantId = (Get-AzTenant).Id
 
