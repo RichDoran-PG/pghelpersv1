@@ -1,5 +1,7 @@
-# Set Module MS Graph
+# Connect to MS Graph
+Connect-MgGraph -Scopes "User.Read.All", "Group.ReadWrite.All"
 
+# Get Mgmt Policy
 Get-MgConditionalAccessPolicy
 
 $policyName = "Block OCONUS Sign-ins"
