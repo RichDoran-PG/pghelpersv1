@@ -1,7 +1,8 @@
-# Define the print server and printer name
-$printServer = "\\10.0.1.5"  # Replace with the actual name or IP of your print server
-$printerName = "RTCPB7030"         # Replace with the shared printer's name
-
-# Use rundll32 to install the printer
-$command = "rundll32 printui.dll,PrintUIEntry /in /n $printServer\$printerName"
-Invoke-Expression $command
+# List Printers installed before scipt is run
+Get-Printer
+# Add Port/Printer Name and IP Address
+Add-PrinterPort -Name "RTCPB7030" -PrinterHostAddress "10.0.1.250"
+# Assign Driver to Named Printer
+Add-Printer -Name "RTCPB7030" -DriverName "Xerox VersaLink B7030 PCL6" -PortName "RTCPB7030"
+# List Printers installed after script run, you should see the New Printer listed
+Get-Printer
