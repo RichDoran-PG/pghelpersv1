@@ -1,5 +1,5 @@
 # Define the print server and printer name
-$printServer = "\\ADSSERVER2"  # Replace with the actual name or IP of your print server
+$printServer = "\\10.0.1.5"  # Replace with the actual name or IP of your print server
 $printerName = "RTCPB7030"         # Replace with the shared printer's name
 
 # Use rundll32 to install the printer
