@@ -1,6 +1,7 @@
-# Define the print server name and printer name
-$printServer = "\\ADSSERVER2"  # Replace with the name of your print server
-$printerName = "RTCPB7030"         # Replace with the name of the shared printer on the server
+# Define the print server and printer name
+$printServer = "\\ADSSERVER2"  # Replace with the actual name or IP of your print server
+$printerName = "RTCPB7030"         # Replace with the shared printer's name
 
-# Add the printer from the local print server
-Add-Printer -ConnectionName "$printServer\$printerName"
+# Use rundll32 to install the printer
+$command = "rundll32 printui.dll,PrintUIEntry /in /n $printServer\$printerName"
+Invoke-Expression $command
