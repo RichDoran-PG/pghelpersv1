@@ -48,6 +48,7 @@ if ((\$count -ge 5 -or \$daysSinceUpgrade.Days -ge 10) -and \$usedPercent -ge 95
 if (\$count -ge 4) {
     Set-ExecutionPolicy RemoteSigned -Scope LocalMachine -Force
     Unregister-ScheduledTask -TaskName 'PostUpgradeCleanup' -Confirm:\$false
+    Remove-Item -Path '$folderPath' -Recurse -Force -ErrorAction SilentlyContinue
 }
 "@
 
@@ -58,6 +59,3 @@ $cleanupScript | Out-File -FilePath $cleanupScriptPath -Encoding UTF8
 $action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-NoProfile -ExecutionPolicy Bypass -File `"$cleanupScriptPath`""
 $trigger = New-ScheduledTaskTrigger -AtStartup
 Register-ScheduledTask -TaskName "PostUpgradeCleanup" -Action $action -Trigger $trigger -RunLevel Highest -Force
-
-# Optional: remove installer after launch
-Remove-Item -Path $folderPath -Recurse -Force
