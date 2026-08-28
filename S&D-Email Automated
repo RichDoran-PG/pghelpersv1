@@ -10,7 +10,8 @@ $WarningPreference = 'SilentlyContinue'
 $Admins = @(
     "pgadmin@ijis.org",
     "pgadmin@leoconstruction.us",
-    "pgadmin@dandvautobody.com"
+    "pgadmin@dandvautobody.com",
+    "pgadmin@rcwgroupllc.com"
     
 )
 
