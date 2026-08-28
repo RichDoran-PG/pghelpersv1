@@ -1,0 +1,74 @@
+# Search and Purge by Email address!
+
+Import-Module ExchangeOnlineManagement
+
+$ProgressPreference = 'SilentlyContinue'
+$InformationPreference = 'SilentlyContinue'
+$WarningPreference = 'SilentlyContinue'
+
+# List of admin accounts
+$Admins = @(
+    "pgadmin@ijis.org",
+    "pgadmin@leoconstruction.us",
+    "pgadmin@dandvautobody.com"
+    
+)
+
+# Picker UI
+$Admin = $Admins | Out-GridView -Title "Select Admin Account" -PassThru
+
+# Validate admin selection
+if (-not $Admin) {
+    Write-Host "No admin selected. Exiting..." -ForegroundColor Yellow
+    exit
+}
+
+# Prompt for sender email address with validation
+do {
+    $Email = Read-Host "What is the email address to search for"
+
+    if (:IsNullOrWhiteSpace($Email)) {
+    Write-Host "Email address cannot be blank." -ForegroundColor Yellow
+    continue
+}
+
+    $ValidEmail = $Email -match '^[^@\s]+@[^@\s]+\.[^@\s]+$'
+
+    if (-not $ValidEmail) {
+        Write-Host "Please enter a valid email address." -ForegroundColor Yellow
+    }
+
+} until ($ValidEmail)
+
+# Variables
+$Name = "RemovePhishingMessage_$(Get-Date -Format 'yyyyMMdd_HHmmss')"
+
+# Connections
+Connect-IPPSSession -UserPrincipalName $Admin -EnableSearchOnlySession
+Connect-ExchangeOnline -UserPrincipalName $Admin
+
+Write-Host "Connected as $Admin" -ForegroundColor Green
+Write-Host "Searching for messages from: $Email" -ForegroundColor Cyan
+
+# Create and start compliance search
+$Search = New-ComplianceSearch `
+    -Name $Name `
+    -ExchangeLocation All `
+    -ContentMatchQuery "(From:$Email)"
+
+Start-ComplianceSearch -Identity $Search.Identity
+
+# Wait for search completion
+Start-Sleep -Seconds 300
+
+# Display search results
+$SearchResults = Get-ComplianceSearch -Identity $Name
+
+Write-Host "Search completed." -ForegroundColor Green
+Write-Host "Items found: $($SearchResults.Items)" -ForegroundColor Cyan
+
+# Purge results
+New-ComplianceSearchAction `
+    -SearchName $Name `
+    -Purge `
+    -PurgeType SoftDelete
